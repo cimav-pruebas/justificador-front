@@ -1,0 +1,93 @@
+
+
+paper-card {
+    display: block;
+    margin: 20px 20px 40px 20px;
+}
+
+.buttons-layout-right {
+    position: fixed;
+    bottom:10px;
+    right: 10px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    display: flex;
+    padding-right: 5px;
+}
+.buttons-layout-right paper-button {
+    float: right;
+    margin-top: 10px;
+    text-transform: capitalize;
+}
+/*
+paper-fab.pdficar {
+  background-color: var(--paper-indigo-500);
+  margin-right: 5px;
+  background-color: #0086B3;
+  color: white;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+*/
+
+paper-radio-button, paper-checkbox{
+    font-size: large;
+    padding-top: 10px;
+}
+
+/*
+paper-fab {
+  position: absolute;
+  top: 30px;-in
+  right: 100px;
+}
+*/
+.align-right {
+    text-align: right;
+}
+
+paper-fab {
+    margin-left: 3px;
+}
+paper-fab.indigo {
+    background-color: #3f51b5; /* var(--paper-indigo-500); */
+    color: white;
+}
+
+paper-button.indigo {
+    background-color: #3f51b5; /* var(--paper-indigo-500); */
+    color: white;
+}
+paper-fab.orange {
+    background-color: #ff9800; /* var(--paper-orange-500); */
+    color: white;
+}
+paper-fab[disabled]{
+    background-color: #ddd !important;
+    color: white;
+}
+paper-fab.custom:hover {
+    background-color: #c5cae9; /* var(--paper-indigo-100); */
+}
+
+paper-icon-button.indigo {
+    color: #3f51b5;
+}
+
+paper-icon-button[disabled]{
+    background-color: #ddd !important;
+    color: white;
+}
+
+.generar-cotizacion {
+    height: 24px;
+    width: 24px;
+    padding: 0;
+    margin-right: 6px;
+}
+
+input::-ms-clear {
+    color: red; /* This sets the cross color as red. */
+    /* The cross can be hidden by setting the display attribute as "none" */
+}

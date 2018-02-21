@@ -1,0 +1,349 @@
+<!doctype html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <title>Generador Justificaciones</title>
+
+  <!-- <base href="/"> -->
+  <script>document.write('<base href="' + document.location + '" />');</script>
+
+  <!--
+  <script src="../node_modules/jquery/dist/jquery.js"></script>
+  -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Setting the right viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- Auth0 Lock script -->
+  <script src="https://cdn.auth0.com/js/lock/10.4/lock.min.js"></script>
+  <script src="https://cdn.auth0.com/w2/auth0-7.1.min.js"></script>
+
+  <!-- Bootstrap -->
+  <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <!--
+  <link rel="stylesheet" href="app/app.component.css">
+  <link rel="stylesheet" href="app/content.component.css">
+  -->
+
+  <!-- Polymer Elements -->
+
+  <script src="assets/bower_components/webcomponentsjs/webcomponents.min.js"></script>
+
+  <script>
+    /* this script must run before Polymer is imported */
+      window.Polymer = {
+          dom: 'shadow'
+      };
+  </script>
+
+  <style is="custom-style">
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    app-toolbar {
+      background: #3f51b5; /* var(--primary-color); */
+      color: #ffffff; /* var(--dark-theme-text-color); */
+    }
+
+    app-header-layout {
+      position: inherit;
+    }
+
+    iron-image {
+      margin-right: 20px;
+      background-color: white;
+      border-radius: 31px/21px;
+      padding: 2px;
+    }
+
+    paper-item {
+      /* min-height: 36px; */
+    }
+
+    paper-button.lowercase {
+      text-transform: lowercase;
+    }
+    paper-button.capitalize {
+      text-transform: capitalize;
+    }
+
+    app-drawer {
+      --app-drawer-width: 320px;
+      --app-drawer-scrim-background: rgba(0, 0, 100, 0.8);
+      --app-drawer-content-container: {
+        background-color: #B0BEC5;
+      }
+    }
+
+    .app-toolbar-drawer .logo {
+      background-color: #B0BEC5;
+    }
+
+    .agregar-requisicion {
+      position: absolute;
+      bottom: 20px;
+      right: 0px;
+      width: 200px;
+      z-index: 1;
+    }
+
+    paper-fab.blue {
+    }
+    paper-fab {
+      display: inline;
+    }
+
+    paper-menu {
+      --paper-menu-background-color: #B0BEC5;
+      padding: 0;
+      /* height: 100%; */
+    }
+
+    #contentContainer {
+      width: 400px;
+    }
+
+    /*
+    paper-menu .badge-left {
+      display: inline-block;
+      font-size: small;
+      color: white;
+      padding: 0.8em 0.7em 0 0.7em;
+      background-color: #4CAF50;
+      line-height: 1em;
+      position: relative;
+      left: 0;
+      top: 0;
+      height: 1.8em;
+      margin-right: .8em;
+      border-radius: 4px 0 0 4px;
+      height: 36px;
+    }
+    paper-menu .badge-right {
+      display: inline-block;
+      font-size: small;
+      color: white;
+      padding: 0.8em 0.7em 0 0.7em;
+      background-color: #4CAF50;
+      line-height: 1em;
+      position: relative;
+      top: 0;
+      height: 1.8em;
+      margin-left: .8em;
+      border-radius: 0px 4px 4px 0;
+      height: 36px;
+      right: 0px;
+    }
+    */
+    .badge-center {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    paper-item:focus {
+      background-color: #a2f6cd !important;
+      border-left: 4px solid #3f51b5;
+    }
+    paper-item selected {
+      background-color: #a2f6cd !important;
+      /*  border-left: 4px solid #3f51b5; ffc107*/
+    }
+
+    paper-item.fancy {
+      --paper-item-focused: {
+        background: #ffc107; /* var(--paper-amber-500); */
+        font-weight: bold;
+      };
+      --paper-item-focused-before: {
+        opacity: 0;
+      };
+    }
+
+    paper-menu  paper-item {
+      cursor: pointer;
+      position: relative;
+      left: 0;
+      /*  background-color: #EEE; */
+      margin: .5em;
+      padding: .3em 0;
+      height: 1.8em;
+      border-radius: 4px;
+      /*  border: 1px solid lightgray; */
+    }
+    /*
+    paper-menu paper-item.selected:hover {
+      color: white;
+      border: 1px solid yellow;
+    }
+    paper-menu paper-item.selected {
+      border: 3px solid #ef9a9a;
+    }
+    */
+    paper-menu  paper-item:hover  {
+      /*  color: #607D8B; */
+      /* background-color: #DDD;*/
+      left: .1em;
+      /*  border: #4bff0f dashed 1px; */
+      /* border: 1px solid red; */
+    }
+    paper-menu .text {
+      position: relative;
+      top: -3px;
+    }
+    iron-icon.big {
+      width: 36px;
+    }
+    .add-solicitud {
+      /* float: right; */
+      margin-right: 0 5px;
+      background-color: #4CAF50; /*var(--paper-red-500);*/
+      color: white;
+      position: absolute;
+      bottom: 130px;
+      left: 10px;
+    }
+    .add-solicitud {
+      /* float: right; */
+      margin-right: 5px;
+      background-color: #4CAF50; /*var(--paper-red-500);*/
+      color: white;
+      position: absolute;
+      bottom: 130px;
+      left: 10px;
+    }
+
+    /*
+    .table-div{display:table}
+    .tr-div{display:table-row}
+    .td-div{display:table-cell; vertical-align: middle;}
+    */
+
+    paper-badge {
+      margin-left: 3px;
+    }
+
+    #tabla-card {
+      font-size: 12px;
+      /*  margin: 5px; */
+    }
+    .id-shortcut {
+      font-size: large;
+      /* background-color: #ff9100; */
+    }
+    .segunda-fila {
+      font-size: larger;
+    }
+    .badge {
+      display: inline-block;
+      min-width: 10px;
+      /*  padding: 3px 7px; */
+      font-size: 12px;
+      /*  font-weight: 700; */
+      line-height: 1;
+      /* color: #fff; */
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      border-radius: 4px;
+    }
+    .badge-segunda-fila {
+      /* background-color: #ffc107; */
+    }
+    .badge-tercera-fila {
+      background-color: #ef9a9a;
+    }
+    .badge-cuarta-fila {
+      background-color: #29b6f6;
+    }
+    td {
+      padding-left: 3px;
+    }
+
+    paper-icon-button.orange {
+      color: #ff9800; /* var(--paper-orange-500); */
+    }
+
+    #toastUpdatedError {
+      --paper-toast-background-color: red;
+      --paper-toast-color: white;
+    }
+
+    /*
+    Divisiǿn
+
+    */
+
+  </style>
+
+
+  <link rel="import" href="assets/bower_components/paper-styles/default-theme.html">
+  <link rel="import" href="assets/bower_components/paper-styles/paper-styles.html">
+  <link rel="import" href="assets/bower_components/paper-styles/paper-styles-classes.html">
+  <link rel="import" href="assets/bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="assets/bower_components/paper-styles/color.html">
+  <link rel="import" href="assets/bower_components/paper-styles/typography.html">
+
+  <link rel="import" href="assets/bower_components/iron-flex-layout/iron-flex-layout.html">
+  <link rel="import" href="assets/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+  <link rel="import" href="assets/bower_components/app-layout/app-layout.html">
+
+  <link rel="import" href="assets/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+  <link rel="import" href="assets/bower_components/paper-input/paper-input.html">
+
+  <link rel="import" href="assets/bower_components/paper-dialog/paper-dialog.html">
+  <link rel="import" href="assets/bower_components/iron-image/iron-image.html">
+
+
+
+  <!-- Good -->
+
+  <link rel="import" href="assets/bower_components/paper-checkbox/paper-checkbox.html">
+  <link rel="import" href="assets/bower_components/paper-input/paper-input.html">
+  <link rel="import" href="assets/bower_components/paper-input/paper-textarea.html">
+  <link rel="import" href="assets/bower_components/paper-card/paper-card.html">
+  <link rel="import" href="assets/bower_components/paper-button/paper-button.html">
+  <link rel="import" href="assets/bower_components/paper-fab/paper-fab.html">
+
+  <link rel="import" href="assets/bower_components/vaadin-date-picker/vaadin-date-picker.html">
+
+  <link rel="import" href="assets/bower_components/paper-progress/paper-progress.html">
+  <link rel="import" href="assets/bower_components/paper-header-panel/paper-header-panel.html">
+  <link rel="import" href="assets/bower_components/paper-toolbar/paper-toolbar.html">
+  <link rel="import" href="assets/bower_components/paper-tooltip/paper-tooltip.html">
+  <link rel="import" href="assets/bower_components/paper-icon-button/paper-icon-button.html">
+  <link rel="import" href="assets/bower_components/paper-menu-button/paper-menu-button.html">
+  <link rel="import" href="assets/bower_components/paper-menu/paper-menu.html">
+  <link rel="import" href="assets/bower_components/paper-menu/paper-submenu.html">
+  <link rel="import" href="assets/bower_components/paper-item/paper-item.html">
+  <link rel="import" href="assets/bower_components/paper-radio-button/paper-radio-button.html">
+  <link rel="import" href="assets/bower_components/paper-radio-group/paper-radio-group.html">
+  <!--   <link rel="import" href="assets/bower_components/iron-icon/iron-icon.html"> -->
+  <link rel="import" href="assets/bower_components/paper-tabs/paper-tabs.html">
+  <link rel="import" href="assets/bower_components/paper-dialog/paper-dialog.html">
+  <link rel="import" href="assets/bower_components/paper-toast/paper-toast.html">
+  <link rel="import" href="assets/bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+
+  <dom-module id="vaadin-combo-box-custom-theme" theme-for="vaadin-combo-box">
+    <template>
+      <style>
+        [part="clear-button"] {
+          display: none;
+        }
+      </style>
+    </template>
+  </dom-module>
+
+</head>
+<body>
+  <app-root>Cargando...<br>Probado en Chrome</app-root>
+</body>
+</html>

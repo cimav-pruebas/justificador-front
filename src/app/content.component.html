@@ -1,0 +1,398 @@
+<paper-card> <!-- heading="Captura" -->
+    <div class="card-content">
+        <div *ngIf="_justificacion">
+
+            <span style="position: absolute; right: 10px; font-size: x-small;">{{_justificacion.id}} | {{_justificacion.empleado.id}} | {{_justificacion.empleado.cuenta_cimav}}</span>
+
+            <form #justificacionForm="ngForm" (ngSubmit)="onSubmit($event.value)">  <!-- (ngModelChange)="onChangeForm($event)" -->
+                <!--   <form (ngSubmit)="onSubmit($event.value)" #justificacionForm="ngForm">  -->
+                <div class="form">
+
+                    <div class="row">
+                        <paper-input id="identificador" (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-4" label="Identificación" char-counter
+                                     maxlength="20" minlength="2" auto-validate error-message="Requiere un identificador rápido." name="identificador"
+                                     [(ngModel)]="_justificacion.identificador"></paper-input>
+                        <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" pattern="^[\w,\s-]+" class="col-md-4" label="Requisición" required char-counter
+                                     maxlength="10" minlength="4" auto-validate error-message="Requirido. Sólo caracteres validos." name="requisicion"
+                                     [(ngModel)]="_justificacion.requisicion"></paper-input>
+                        <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-4" label="Número de proyecto" char-counter required maxlength="12"
+                                     minlength="4" auto-validate error-message="requiere número de proyecto" name="proyecto" [(ngModel)]="_justificacion.proyecto"></paper-input>
+                        <paper-tooltip position="top" for="identificador" offset="0">Referencia rápida a la justificación</paper-tooltip>
+                    </div>
+
+                    <div class="row">
+
+                        <vaadin-combo-box id="tipo_select" class="col-md-6" required auto-validate error-message="requiere seleccionar un tipo"
+                                          label="Tipo de justificación"
+                                          [items]="tipos"
+                                          item-label-path="texto"
+                                          item-value-path="code"
+                                          (selectedItemChange)="selectedTipoChange($event)"
+                                          (selectedItem)=_justificacion.tipo
+                                          [value]="getCodeNotEmpty(_justificacion.tipo)"
+                                          clear-button="false"
+                                          clearButton="false"
+                                          [clear-button]="false"
+                                          [clearButton]="false"
+                        >
+                            <paper-icon-button icon="remove-circle" class="clear-button" style="display: none;"></paper-icon-button>
+                        </vaadin-combo-box>
+
+                        <vaadin-combo-box class="col-md-6" *ngIf="_justificacion.tipo?.fraccion == 7" required auto-validate error-message="requiere seleccionar la partida"
+                                          label="Partida presupuestal"
+                                          [items]="partidas"
+                                          item-label-path="texto"
+                                          item-value-path="nombre"
+                                          (selectedItemChange)="selectedPartidaChange($event)"
+                                          (selectedItem)=_justificacion.partida
+                                          [value]="getPartidaNotEmpty(_justificacion.partida)"
+                        >
+                            <paper-icon-button icon="remove-circle" class="clear-button" style="display: none;"></paper-icon-button>
+                        </vaadin-combo-box>
+
+                    </div>
+
+                    <div class="row">
+                        <paper-radio-group class="col-md-6" [selected]="_justificacion.bien_servicio == 0 ? 'cero' : 'uno'"
+                                           (change)="selectedBienOServicioChange($event)">
+                            <paper-radio-button name="cero" value="0" (ngModelChange)="_justificacion.bien_servicio">Bien
+                            </paper-radio-button>
+                            <paper-radio-button name="uno" value="1" (ngModelChange)="_justificacion.bien_servicio">Servicio
+                            </paper-radio-button>
+                        </paper-radio-group>
+                        <vaadin-date-picker class="col-md-6" name="fecha-elaboracion" auto-validate required
+                                            [(ngModel)]="_justificacion.fecha_elaboracion"
+                                            label="Fecha elaboración">
+                        </vaadin-date-picker>
+                    </div>
+
+                    <paper-textarea *ngIf="_justificacion.tipo?.fraccion != 14" name="descripcion" [(ngModel)]="_justificacion.descripcion" label="Descripción de la compra" char-counter
+                                    maxlength="2000" required auto-validate error-message="requerido"></paper-textarea>
+                    <paper-textarea *ngIf="_justificacion.tipo?.fraccion==14" name="descripcion" [(ngModel)]="_justificacion.descripcion"
+                                    label="Perfil requerido y actividades a desarrollar" char-counter maxlength="2000" required auto-validate
+                                    error-message="requerido"></paper-textarea>
+
+                    <div style="
+          padding-top: 10px;
+    font: inherit;
+    color: #737373;
+    -webkit-transition: -webkit-transform 0.25s, width 0.25s;
+    transition: transform 0.25s, width 0.25s;
+    -webkit-transform-origin: left top;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: 'Roboto', 'Noto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+          ">Plazo y condiciones
+                    </div>
+                    <div class="col-lg-offset-1">
+
+                        <paper-radio-group [selected]="setPlazo(_justificacion.plazo)" (change)="selectedPlazoChange($event)">
+                            <paper-radio-button name="plazo0" value="0" (ngModelChange)="_justificacion.plazo">Periodo</paper-radio-button>
+                            <paper-radio-button name="plazo1" value="1" (ngModelChange)="_justificacion.plazo">Fecha tope</paper-radio-button>
+                            <paper-radio-button name="plazo2" value="2" (ngModelChange)="_justificacion.plazo">A tantos días</paper-radio-button>
+                        </paper-radio-group>
+
+                        <div class="row">
+                            <vaadin-date-picker *ngIf="_justificacion.plazo==0" class="col-md-3" name="fecha-inicio" auto-validate required
+                                                [(ngModel)]="_justificacion.fecha_inicio" label="Fecha inicio">
+                            </vaadin-date-picker>
+                            <vaadin-date-picker *ngIf="_justificacion.plazo<=1" class="col-md-3" name="fecha-termino" auto-validate required
+                                                [(ngModel)]="_justificacion.fecha_termino" label="Fecha término">
+                            </vaadin-date-picker>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" *ngIf="_justificacion.plazo==2" class="align-right col-md-3" label="Días" required
+                                         auto-validate error-message="requerido / sólo números" pattern="[0-9,.]+"
+                                         name="dias-plazo" [(ngModel)]="_justificacion.num_dias_plazo">
+                                <div prefix>#</div>
+                            </paper-input>
+                        </div>
+                        <paper-textarea name="condicionespago" [(ngModel)]="_justificacion.condiciones_pago" label="Condiciones de pago" required char-counter maxlength="400"
+                                        auto-validate error-message="requerido"></paper-textarea>
+                    </div>
+
+                    <paper-checkbox name="esUnico" [attr.disabled]="(_justificacion.tipo?.fraccion==1 || _justificacion.tipo?.fraccion==14)?'disabled':null" [(ngModel)]="_justificacion.es_unico">¿Es Proveedor/Persona única?</paper-checkbox>
+                    <!--
+                    <div style="
+                            padding-top: 10px;
+                            font: inherit;
+                            color: #737373;
+                            -webkit-transition: -webkit-transform 0.25s, width 0.25s;
+                            transition: transform 0.25s, width 0.25s;
+                            -webkit-transform-origin: left top;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            font-family: 'Roboto', 'Noto', sans-serif;
+                            -webkit-font-smoothing: antialiased;
+                            font-size: 16px;
+                            font-weight: 400;
+                            line-height: 24px;
+                    "></div>
+                    -->
+                    <div class="col-lg-offset-1">
+
+                        <paper-tooltip position="top" for="cotizar_id" offset="0">Generar cotización</paper-tooltip>
+
+                        <p *ngIf="_justificacion.es_unico" style="color: gray;">Cuando es proveedor o persona única se aplicará la Fracción I</p>
+                        <p *ngIf="_justificacion.tipo?.fraccion==1" style="color: gray;">Cuando es Fracción I debe ser proveedor o persona única</p>
+                        <p *ngIf="_justificacion.tipo?.fraccion==14" style="px; color: gray;">Cuando es Fracción XIV no debe ser proveedor o persona única</p>
+
+                        <div class="row" *ngIf="_justificacion.es_unico">
+
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-8" name="proveedorUnico" [(ngModel)]="_justificacion.proveedor_uno"
+                                         label="Proveedor único" required char-counter maxlength="200" auto-validate error-message="requiere proveedor único">
+                                <paper-icon-button id="cotizar_id" raised class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(1)" [disabled]=!justificacionForm.form.valid></paper-icon-button> <!-- !justificacionForm.form.valid -->
+
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorUnicoMoneda"
+                                         [(ngModel)]="_justificacion.monto_uno" (change)="onMontoUno()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
+                                <div prefix>$</div>
+                            </paper-input>
+                        </div>
+
+                        <div class="row" *ngIf="!_justificacion.es_unico && _justificacion.tipo?.fraccion!=14">
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="proveedorUno" [(ngModel)]="_justificacion.proveedor_uno"
+                                         label="Proveedor seleccionado" required char-counter maxlength="200" auto-validate error-message="requiere proveedor uno">
+                                <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(1)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorUnoMoneda"
+                                         [(ngModel)]="_justificacion.monto_uno" (change)="onMontoUno()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
+                                <div prefix>$</div>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="proveedorDos" [(ngModel)]="_justificacion.proveedor_dos"
+                                         label="Segundo proveedor" required char-counter maxlength="200" auto-validate error-message="requiere proveedor dos">
+                                <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(2)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorDosMoneda"
+                                         [(ngModel)]="_justificacion.monto_dos" (change)="onMonto()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
+                                <div prefix>$</div>
+                            </paper-input>
+
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="proveedorTres" [(ngModel)]="_justificacion.proveedor_tres"
+                                         label="Tercer proveedor" char-counter maxlength="200">
+                                <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(3)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorTresMoneda"
+                                         [(ngModel)]="_justificacion.monto_tres" (change)="onMonto()" label="Monto"  auto-validate error-message="sólo números"  min="0.00" max="19999999.99" pattern="[0-9,.]+" >
+                                <div prefix>$</div>
+                            </paper-input>
+                        </div>
+                        <div class="row" *ngIf="!_justificacion.es_unico  && _justificacion.tipo?.fraccion==14">
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="personaUno" [(ngModel)]="_justificacion.proveedor_uno"
+                                         label="Persona seleccionada" required char-counter maxlength="200" auto-validate error-message="requiere persona uno">
+                                <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(1)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="personaUnoMoneda"
+                                         [(ngModel)]="_justificacion.monto_uno" (change)="onMontoUno()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
+                                <div prefix>$</div>
+                            </paper-input>
+
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="personaDos" [(ngModel)]="_justificacion.proveedor_dos"
+                                         label="Segunda persona" required char-counter maxlength="200" auto-validate error-message="requiere persona dos">
+                                <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(2)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="personaDosMoneda"
+                                         [(ngModel)]="_justificacion.monto_dos" (change)="onMonto()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
+                                <div prefix>$</div>
+                            </paper-input>
+
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="personaTres" [(ngModel)]="_justificacion.proveedor_tres"
+                                         label="Tercera persona" char-counter maxlength="200">
+                                <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(3)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="personaTresMoneda"
+                                         [(ngModel)]="_justificacion.monto_tres" (change)="onMonto()" label="Monto"  auto-validate error-message="sólo números" pattern="[0-9,.]+" min="0.00" max="19999999.99">
+                                <div prefix>$</div>
+                            </paper-input>
+                        </div>
+
+                        <div class="row" *ngIf="!_justificacion.es_unico">
+                            <paper-textarea class="col-md-12" name="motivoSeleccion" [(ngModel)]="_justificacion.motivo_seleccion"
+                                            label="Motivo de la selección del proveedor o persona" required char-counter maxlength="800" auto-validate
+                                            error-message="requerido"></paper-textarea>
+                        </div>
+
+                    </div>
+
+                    <div style="
+                        padding-top: 10px;
+                        font: inherit;
+                        color: #737373;
+                        -webkit-transition: -webkit-transform 0.25s, width 0.25s;
+                        transition: transform 0.25s, width 0.25s;
+                        -webkit-transform-origin: left top;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        font-family: 'Roboto', 'Noto', sans-serif;
+                        -webkit-font-smoothing: antialiased;
+                        font-size: 16px;
+                        font-weight: 400;
+                        line-height: 24px;
+                    ">Datos proveedor/persona seleccionado</div>
+
+                    <div class="col-lg-offset-1">
+                        <paper-checkbox name="esNacional" [(ngModel)]="_justificacion.es_nacional">¿Es nacional?</paper-checkbox>
+                        <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" (focus)="onFocus($event)" (mouseup)="onFocus($event)" label="Domicilio " required
+                                     auto-validate error-message="requerido" name="domicilio" [(ngModel)]="_justificacion.domicilio"></paper-input>
+                        <div class="row">
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-3" label="RFC" required char-counter maxlength="40" auto-validate
+                                         error-message="requerido" name="rfc" [(ngModel)]="_justificacion.rfc"></paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-3" label="Teléfono" required char-counter maxlength="40" auto-validate
+                                         error-message="requerido" name="telefono" [(ngModel)]="_justificacion.telefono"></paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-3" label="Email" required char-counter maxlength="100" auto-validate
+                                         error-message="requerido" name="correo" [(ngModel)]="_justificacion.email"></paper-input>
+                        </div>
+                        <paper-textarea name="datosbanco" [(ngModel)]="_justificacion.datosbanco" label="Datos del banco" required char-counter maxlength="200" auto-validate
+                                        error-message="requerido"></paper-textarea>
+                    </div>
+
+
+                    <div style="
+                        padding-top: 10px;
+                        font: inherit;
+                        color: #737373;
+                        -webkit-transition: -webkit-transform 0.25s, width 0.25s;
+                        transition: transform 0.25s, width 0.25s;
+                        -webkit-transform-origin: left top;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        font-family: 'Roboto', 'Noto', sans-serif;
+                        -webkit-font-smoothing: antialiased;
+                        font-size: 16px;
+                        font-weight: 400;
+                        line-height: 24px;
+                    ">Monto estimado</div>
+                    <div class="col-lg-offset-1">
+                        <div class="row">
+
+                            <vaadin-combo-box class="col-md-3" required auto-validate error-message="requiere moneda"
+                                              label="Moneda"
+                                              [items]="monedas"
+                                              item-label-path="code"
+                                              item-value-path="code"
+                                              (selectedItem)="_justificacion.moneda"
+                                              [value]="getMonedaNotEmpty(_justificacion.moneda)"
+                                              (selectedItemChange)="selectedMonedaChange($event)"
+                            >
+                                <paper-icon-button icon="remove-circle" class="clear-button" style="display: none;"></paper-icon-button>
+                            </vaadin-combo-box>
+
+
+                            <paper-textarea class="col-md-9" name="formapago" [(ngModel)]="_justificacion.forma_pago"
+                                            label="Forma de pago (cheque, trasferencia bancaria, depósito, etc.)" char-counter maxlength="400" required auto-validate
+                                            error-message="requerido"></paper-textarea>
+                        </div>
+
+                        <paper-tooltip position="left" for="subtotal1_id" offset="0">Corresponde a la cantidad asignida al proveedor/persona ganador(a)</paper-tooltip>
+                        <div class="row">
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" id="subtotal1_id" class="align-right col-lg-offset-10 col-md-2" label="Sub total"
+                                         disabled readonly="true" required auto-validate error-message="requerido / sólo números" name="subtotal" (change)="sumarTotal()"
+                                         [(ngModel)]="_justificacion.subtotal" pattern="[0-9,.]+">
+                                <div prefix>$</div>
+                            </paper-input>
+                        </div>
+                        <div class="row">
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-lg-offset-10 col-md-2" label="Iva" name="iva"
+                                         [(ngModel)]="_justificacion.iva" (change)="sumarTotal()" required auto-validate error-message="requerido / sólo números"
+                                         pattern="[0-9,.]+">
+                                <div prefix>$</div>
+                            </paper-input>
+                        </div>
+                        <div class="row">
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-lg-offset-10 col-md-2" label="Total" name="total"
+                                         readonly="true" [ngModel]="_justificacion.importe" required auto-validate error-message="requerido">
+                                <div prefix>$</div>
+                            </paper-input>
+                        </div>
+
+                        <div class="row">
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-lg-offset-10 col-md-1" label="Parcialidad(es)" auto-validate
+                                         error-message="requerido / sólo números" pattern="[0-9]+" (change)="parcialidades()" name="parcialidades" [(ngModel)]="_justificacion.num_pagos">
+                                <div prefix>#</div>
+                            </paper-input>
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" id="anticipo_id" class="align-right col-md-1" label="Anticipo" auto-validate
+                                         error-message="requerido / sólo números" (change)="anticipo()" pattern="[0-9]+" name="anticipo" [(ngModel)]="_justificacion.porcen_anticipo">
+                                <div prefix>%</div>
+                            </paper-input>
+                            <paper-tooltip for="anticipo_id" offset="0">Lorem ipsum dolor sit amet, reque facilisis in sed. Alterum vituperata ea vix. Vix dicta forensibus ut,
+                                convenire iudicabit mei in. Viderer signiferumque et sea, iriure denique signiferumque an sea.
+                            </paper-tooltip>
+                        </div>
+
+                    </div>
+
+
+                    <paper-textarea name="razoncompra" [(ngModel)]="_justificacion.razoncompra" label="Razón y/o utilidad de la compra" char-counter maxlength="2000" required
+                                    auto-validate error-message="requerido"></paper-textarea>
+                    <paper-textarea name="terminoscompra" [(ngModel)]="_justificacion.terminos_entrega" label="Términos de compra" char-counter maxlength="200" required
+                                    auto-validate error-message="requerido"></paper-textarea>
+
+                    <div class="row">
+                        <vaadin-combo-box class="col-md-6" required auto-validate error-message="requiere seleccionar al empleado que solicita"
+                                          label="Solicitante"
+                                          item-label-path="nombre"
+                                          item-value-path="nombre"
+                                          [items]="empleados"
+                                          [value]="getNameNotEmpty(_justificacion.elabora)"
+                                          (selectedItem)="_justificacion.elabora"
+                                          (selectedItemChange)="selectedElaboraChange($event)"
+                        >
+                            <paper-icon-button icon="remove-circle" class="clear-button" style="display: none;"></paper-icon-button>
+                        </vaadin-combo-box>
+                    </div>
+
+                    <div class="row">
+                        <vaadin-combo-box class="col-md-6" required auto-validate error-message="requiere seleccionar al empleado que autoriza"
+                                          label="Autoriza (responsable del proyecto)"
+                                          item-label-path="nombre"
+                                          item-value-path="nombre"
+                                          [items]="empleados"
+                                          [value]="getNameNotEmpty(_justificacion.autoriza)"
+                                          (selectedItem)="_justificacion.autoriza"
+                                          (selectedItemChange)="selectedAutorizaChange($event)"
+                        >
+                            <paper-icon-button icon="remove-circle" class="clear-button" style="display: none;"></paper-icon-button>
+                        </vaadin-combo-box>
+
+                        <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-6" label="Cargo/puesto de quien autoriza" char-counter maxlength="100"
+                                     name="cargo" [(ngModel)]="_justificacion.autoriza_cargo"></paper-input>
+                    </div>
+
+                </div>
+            </form>
+
+            <div style="height: 20px;"></div>
+
+            <div class="buttons-layout-right">
+
+                <!--        <a href target="_blank" [href]="getUrlPDF()"> -->
+                <paper-fab mini id="pdficar_id" raised class="custom indigo" icon="print" [disabled]=!justificacionForm.form.valid (click)="pdficar()">PDF</paper-fab> <!--  -->
+                <paper-tooltip position="left" for="pdficar_id" offset="0">Generar PDF</paper-tooltip>
+                <!--        </a> -->
+
+                <!-- -->
+                <paper-fab mini id="guardar_id" raised class="custom indigo" icon="save" [disabled]=justificacionForm.form.pristine
+                           (click)="justificacionForm.ngSubmit.emit(justificacionForm);" >Actualizar </paper-fab> <!-- onclick="document.querySelector('#toastUpdated').show();" -->
+                <paper-tooltip position="left" for="guardar_id" offset="0">Guardar Justificación</paper-tooltip>
+
+                <!--
+                <paper-fab mini id="sincronizar_id" raised class="custon indigo" icon="refresh" (click)="sincronizar();" onclick="document.querySelector('#toastSincronizada').show();">Sincronizar</paper-fab>
+                <paper-tooltip position="left" for="sincronizar_id" offset="0">Sincronizar Justificación</paper-tooltip>
+                -->
+
+                <!--
+                <paper-fab mini id="delete_id" raised class="custom orange" icon="delete" onclick="document.querySelector('#confirmarDeleteDlg').open();" >Eliminar</paper-fab> <!--  eliminarCall() -->
+                <!--
+                <paper-tooltip position="left" for="delete_id" offset="0">Elimnar justificación</paper-tooltip>
+                -->
+            </div>
+
+        </div> <!-- *ngIf="_justificacion" -->
+
+    </div> <!-- card-content -->
+
+
+</paper-card>
+

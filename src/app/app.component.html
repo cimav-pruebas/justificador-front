@@ -1,0 +1,148 @@
+
+<paper-toast #toastUpdated id="toastUpdated" text="Justificación guardada" ></paper-toast>
+<paper-toast #toastUpdatedError id="toastUpdatedError" text="Error al guardar" duration="0" style="background-color: #bf360c;">
+    <paper-button onclick="toastUpdatedError.toggle()" style="color:#eeff41">Cerrar</paper-button>
+</paper-toast>
+<paper-toast #toastSincronizada id="toastSincronizada" text="Justificación sincronizada" ></paper-toast>
+<paper-toast #toastHonorariosNoUnicos id="toastHonorariosNoUnicos" text="Las subcontrataciones no pueden ser de Proveedor único" ></paper-toast>
+
+<paper-dialog id="confirmarAgregarDlg" modal>
+    <h2>Nueva justificación</h2>
+    <div><p >Confirme agregar una nueva justificación</p></div>
+    <div class="buttons">
+        <paper-button dialog-dismiss>Cancelar</paper-button>
+        <paper-button dialog-confirm autofocus (click)="onAgregar()">Aceptar</paper-button>
+    </div>
+</paper-dialog>
+
+<paper-dialog id="confirmarDeleteDlg" #confirmarDeleteDlg modal>
+    <h2>Eliminar justificación</h2>
+    <div><p *ngIf="selectedJustificacion"  >Confirme eliminación permanente de la justificación: {{selectedJustificacion.requisicion}}</p></div>
+    <div class="buttons">
+        <paper-button dialog-dismiss>Cancelar</paper-button>
+        <paper-button dialog-confirm autofocus (click)="onEliminarJustificacion()">Aceptar</paper-button>
+    </div>
+</paper-dialog>
+
+<paper-dialog id="confirmarClonarDlg" #confirmarClonarDlg modal>
+    <h2>Duplicar justificación</h2>
+    <div><p *ngIf="selectedJustificacion"  >Confirme duplicar la justificación: {{selectedJustificacion.requisicion}}</p></div>
+    <div class="buttons">
+        <paper-button dialog-dismiss>Cancelar</paper-button>
+        <paper-button dialog-confirm autofocus (click)="onClonarJustificacion()">Aceptar</paper-button>
+    </div>
+</paper-dialog>
+
+<paper-dialog id="errorUpdateDlg" #errorUpdateDlg modal>
+    <h2>Faltan datos</h2>
+    <div><p id="errorUpdateTxt" #errorUpdateTxt></p></div>
+    <div class="buttons">
+        <paper-button dialog-confirm autofocus>Aceptar</paper-button>
+    </div>
+</paper-dialog>
+
+<app-drawer-layout fullbleed >
+
+    <app-drawer  >
+        <app-toolbar class="app-toolbar-drawer" >
+            <iron-image src="assets/img/logo-cimav.png"></iron-image>
+            <div style="text-align: center;"><span>Justificador</span><span style="display: block; font-size: small; letter-spacing: 4px;">generador</span></div>
+            <paper-progress value="100"  bottom-item style="width: 100%; "></paper-progress>
+        </app-toolbar>
+
+        <div *ngIf="auth.isLogged()">
+
+            <paper-scroll-header-panel class="" style="width: 100%; position: absolute; bottom: 100px; top: 190px;">
+                <paper-menu >
+
+                    <paper-item *ngFor="let justificacion of justificaciones ; let i = index"
+                                [class.selected]="justificacion == selectedJustificacion"
+                                (click)="onClickJustificacion(justificacion, i)"
+                                style="min-height: 96px;"
+                                [style.border-left]="setStyleSelected(justificacion) ? '4px solid #3f51b5' : '4px solid transparent'"
+                                [style.background-color]="setStyleSelected(justificacion) ? '#a2f6cd' : '#eee'"
+                    >
+
+                        <div class="table-div" style="display:table; width:100%; border-radius: 4px;">
+                            <div>
+                                <span style="padding-left: 4px;">{{justificacion.identificador}}</span>
+                                <span style="float: right; font-size: small; padding-right: 4px;" *ngIf="esAsistente">{{justificacion.empleado?.cuenta_cimav}}</span>
+                            </div>
+                            <div><paper-badge class="badge badge-segunda-fila">{{justificacion.requisicion}}</paper-badge><paper-badge class="badge badge-segunda-fila">{{justificacion.proyecto}}</paper-badge></div>
+                            <div><paper-badge class="badge badge-tercera-fila">{{justificacion.elabora?.cuenta_cimav}}</paper-badge><paper-badge class="badge badge-tercera-fila">{{justificacion.autoriza?.cuenta_cimav}}</paper-badge></div>
+                            <div>
+                                <paper-badge class="badge badge-cuarta-fila">{{justificacion.tipo?.romano}}</paper-badge>
+                                <paper-badge class="badge badge-cuarta-fila">{{justificacion.moneda?.code}}</paper-badge>
+                                <paper-badge class="badge badge-cuarta-fila">{{justificacion.moneda?.simbolo}}{{justificacion.importe | number:'.2-2'}}</paper-badge>
+                            </div>
+                            <span *ngIf="justificacion == selectedJustificacion" style="width: 40px; position: absolute; bottom: 0px; right: 0px;">
+                                <paper-icon-button id="clonar_id"  icon="content-copy" class="custom orange"  onclick="document.querySelector('#confirmarClonarDlg').open();" style="float: right; padding: 8px;  width: 36px; height: 36px;"></paper-icon-button>
+                                <paper-tooltip position="left" for="clonar_id" offset="0">Duplicar justificación</paper-tooltip>
+
+                                <paper-icon-button id="delete_id"  icon="delete" class="custom orange"  onclick="document.querySelector('#confirmarDeleteDlg').open();" style="float: right; padding: 8px;  width: 36px; height: 36px;"></paper-icon-button>
+                                <paper-tooltip position="left" for="delete_id" offset="0">Eliminar justificación</paper-tooltip>
+                            </span>
+                        </div>
+
+                    </paper-item>
+
+
+                    <paper-item style="visibility: collapse;"><span>Invisible </span></paper-item>
+                </paper-menu>
+
+            </paper-scroll-header-panel>
+
+            <div *ngIf="auth.isLogged()">
+                <paper-fab #agregar_id id="agregar_id" *ngIf="auth.isLogged()" class="add-solicitud" icon="add" onclick="confirmarAgregarDlg.open()" ></paper-fab>
+                <paper-tooltip position="right" for="agregar_id" offset="0">Agregar nueva Justificación</paper-tooltip>
+            </div>
+        </div>
+    </app-drawer>
+
+    <app-header-layout has-scrolling-region>
+        <app-header fixed condenses >
+            <app-toolbar>
+                <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+
+                <div main-title></div>
+
+                <paper-button *ngIf="auth.isLogged()" (click)="logout()" class="lowercase">{{auth.nickName}}
+                    <iron-icon icon="launch" style="margin-left: 5px;"></iron-icon>
+                </paper-button>
+                <paper-button *ngIf="!auth.isLogged()" (click)="auth.login()" class="capitalize">Entrar
+                    <iron-icon icon="exit-to-app" style="margin-left: 5px;"></iron-icon>
+                </paper-button>
+
+                <paper-progress value="100"  bottom-item style="width: 100%; "></paper-progress>
+            </app-toolbar>
+
+        </app-header>
+
+
+        <main-content *ngIf="selectedJustificacion && auth.isLogged()" [justificacion]="selectedJustificacion" >
+        </main-content>
+
+        <paper-card *ngIf="auth.isLogged() && auth.nickName.includes('juan.calderon')"  style="margin:10px; background-color: #fae596; float: right;" heading="">
+            <div class="card-content" >Versión: {{config.version}}</div>
+            <div class="card-content" >Logged: {{auth.isLogged()}} @ {{auth.nickName}}</div>
+            <div class="card-content" >Rest: {{config.apiUrl}}</div>
+
+            <paper-input label="Entrar como" [(ngModel)]="loggedAs" >
+                <paper-icon-button icon="send" prefix (click)="logearseAs()" ></paper-icon-button>
+            </paper-input>
+        </paper-card>
+
+
+        <paper-card style="margin:10px; background-color: #fae596; float: right;" *ngIf="!auth.isLogged()" heading="La applicación está desconectada">
+            <span class="glyphicon glyphicon-signal" style="border-radius: 24px; background-color: white; padding: 8px; font-size: 24px; left: 12px"></span>
+            <span class="card-content" style="float: right;">Por favor, entre con cuenta del Cimav</span>
+        </paper-card>
+        <paper-card style="margin:10px; background-color: #ff9900; float: right;" *ngIf="!isDbConnected" heading="La applicación está desconectada">
+            <span class="glyphicon glyphicon-signal" style="border-radius: 24px; background-color: white; padding: 8px; font-size: 24px; left: 12px"></span>
+            <span class="card-content" style="float: right;">Por favor, entre con cuenta del Cimav</span>
+        </paper-card>
+
+    </app-header-layout>
+
+</app-drawer-layout>
+
