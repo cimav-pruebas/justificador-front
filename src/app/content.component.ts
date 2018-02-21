@@ -93,9 +93,9 @@ export class ContentComponent implements OnInit {
       if (!isNullOrUndefined(event)) {
           // OJO: revisar si provoca Bug
           if (event.fraccion == 14) {
-              this._justificacion.es_unico = false;
+              // this._justificacion.es_unico = false;
           } else if (event.fraccion == 1) {
-              this._justificacion.es_unico = true;
+              // this._justificacion.es_unico = true;
           }
       }
 
