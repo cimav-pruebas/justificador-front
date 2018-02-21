@@ -113,7 +113,8 @@
                                         auto-validate error-message="requerido"></paper-textarea>
                     </div>
 
-                    <paper-checkbox name="esUnico" [attr.disabled]="(_justificacion.tipo?.fraccion==1 || _justificacion.tipo?.fraccion==14)?'disabled':null" [(ngModel)]="_justificacion.es_unico">¿Es Proveedor/Persona única?</paper-checkbox>
+                    <paper-checkbox name="esUnico" [(ngModel)]="_justificacion.es_unico">¿Es Proveedor/Persona única?</paper-checkbox>
+                    <!--  [attr.disabled]="(_justificacion.tipo?.fraccion==1 || _justificacion.tipo?.fraccion==14)?'disabled':null" -->
                     <!--
                     <div style="
                             padding-top: 10px;
