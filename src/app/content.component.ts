@@ -82,6 +82,10 @@ export class ContentComponent implements OnInit {
 
   }
 
+  setEsUnico(justi:Justificacion) {
+
+  }
+
   selectedTipoChange(event) {
 
 //      if (isNullOrUndefined(event)) return;
@@ -92,11 +96,16 @@ export class ContentComponent implements OnInit {
 
       if (!isNullOrUndefined(event)) {
           // OJO: revisar si provoca Bug
-          if (event.fraccion == 14) {
-              // this._justificacion.es_unico = false;
-          } else if (event.fraccion == 1) {
-              // this._justificacion.es_unico = true;
-          }
+          /*
+          let that =  this;
+          setTimeout(function() {
+              if (event.fraccion == 14 ) {
+                  that._justificacion.es_unico = false;
+              } else if (event.fraccion == 1) {
+                  that._justificacion.es_unico = true;
+              }
+          }, 50);
+          */
       }
 
       if (false && this._justificacion.tipo.id == 2) {
