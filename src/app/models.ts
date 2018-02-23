@@ -135,7 +135,7 @@ export class Justificacion {
     this.num_dias_plazo = 1;
     this.num_pagos = 1;
     this.porcen_anticipo = 0;
-    this.autoriza_cargo = '';
+    this.autoriza_cargo = 'RESPONSABLE DEL PROYECTO';
     this.forma_pago = '';
 
     this.motivo_seleccion = '';

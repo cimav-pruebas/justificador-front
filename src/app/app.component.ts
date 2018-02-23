@@ -136,6 +136,7 @@ export class AppComponent implements  OnInit {
     var partida22104 =  new Partida();
     partida22104.id = 22104;
     nuevaJustificacion.partida = partida22104;
+    nuevaJustificacion.autoriza_cargo = "RESPONSABLE DEL PROYECTO";
     this.dataService.Add(nuevaJustificacion).subscribe((responseCreada: Justificacion) => {
           this.loadJustificaciones(1);
         },

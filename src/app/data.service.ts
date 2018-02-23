@@ -187,6 +187,10 @@ export class DataService {
     justificacion.empleado_elaboro_id = isNullOrUndefined(justificacion.elabora) ? null : justificacion.elabora.id;
     justificacion.partida_id = isNullOrUndefined(justificacion.partida) ? null : justificacion.partida.id;
 
+    if (justificacion.autoriza_cargo.trim().length <= 0) {
+      justificacion.autoriza_cargo = "RESPONSABLE DEL PROYECTO";
+    }
+
      var url = this.config.apiUrl + "justificaciones/" + id + ".json";
     return this._http.put(url, JSON.stringify(justificacion), {headers: this.headers})
         .map((response: Response) => {

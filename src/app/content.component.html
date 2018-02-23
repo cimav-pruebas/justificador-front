@@ -358,7 +358,7 @@
                         </vaadin-combo-box>
 
                         <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-6" label="Cargo/puesto de quien autoriza" char-counter maxlength="100"
-                                     name="cargo" [(ngModel)]="_justificacion.autoriza_cargo"></paper-input>
+                                     name="cargo" [(ngModel)]="_justificacion.autoriza_cargo" required auto-validate error-message="requerido"></paper-input>
                     </div>
 
                 </div>
