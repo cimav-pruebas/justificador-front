@@ -81,7 +81,8 @@ export class AppComponent implements  OnInit {
 
             this.selectedJustificacion = null;
             if (idxSel == 1) {
-              this.selectedJustificacion = this.justificaciones[this.justificaciones.length - 1];
+              //this.selectedJustificacion = this.justificaciones[this.justificaciones.length - 1];
+              this.selectedJustificacion = this.justificaciones[0];
             }
 
             /*

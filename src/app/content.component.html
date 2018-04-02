@@ -4,17 +4,17 @@
 
             <span style="position: absolute; right: 10px; font-size: x-small;">{{_justificacion.id}} | {{_justificacion.empleado.id}} | {{_justificacion.empleado.cuenta_cimav}}</span>
 
-            <form #justificacionForm="ngForm" (ngSubmit)="onSubmit($event.value)">  <!-- (ngModelChange)="onChangeForm($event)" -->
+            <form #justificacionForm="ngForm"  (ngSubmit)="onSubmit($event.value)" novalidate>  <!--    (ngModelChange)="onChangeForm($event)" -->
                 <!--   <form (ngSubmit)="onSubmit($event.value)" #justificacionForm="ngForm">  -->
-                <div class="form">
+                <!-- <div class="form"> -->
 
                     <div class="row">
                         <paper-input id="identificador" (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-4" label="Identificación" char-counter
                                      maxlength="20" minlength="2" auto-validate error-message="Requiere un identificador rápido." name="identificador"
-                                     [(ngModel)]="_justificacion.identificador"></paper-input>
+                                     [(ngModel)]="_justificacion.identificador" autocomplete="identificador"></paper-input>
                         <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" pattern="^[\w,\s-]+" class="col-md-4" label="Requisición" required char-counter
                                      maxlength="10" minlength="4" auto-validate error-message="Requirido. Sólo caracteres validos." name="requisicion"
-                                     [(ngModel)]="_justificacion.requisicion"></paper-input>
+                                     [(ngModel)]="_justificacion.requisicion" autocomplete></paper-input>
                         <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-4" label="Número de proyecto" char-counter required maxlength="12"
                                      minlength="4" auto-validate error-message="requiere número de proyecto" name="proyecto" [(ngModel)]="_justificacion.proyecto"></paper-input>
                         <paper-tooltip position="top" for="identificador" offset="0">Referencia rápida a la justificación</paper-tooltip>
@@ -361,7 +361,7 @@
                                      name="cargo" [(ngModel)]="_justificacion.autoriza_cargo" required auto-validate error-message="requerido"></paper-input>
                     </div>
 
-                </div>
+                <!-- </div> -->
             </form>
 
             <div style="height: 20px;"></div>
