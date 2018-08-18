@@ -100,6 +100,7 @@ export class Justificacion {
   forma_pago: string;
   motivo_seleccion: string;
   es_nacional: boolean;
+  decision:number;
 
   constructor(){
     this.requisicion = '';
@@ -141,6 +142,8 @@ export class Justificacion {
     this.motivo_seleccion = '';
 
     this.es_nacional = true;
+
+    this.decision = 1;
   }
 
 }

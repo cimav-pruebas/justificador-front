@@ -151,6 +151,14 @@ export class ContentComponent implements OnInit {
     return 'plazo' + plazoSel;
   }
 
+    setDecision(decisionSel: number) {
+        return 'decision' + decisionSel;
+    }
+    selectedDecisionChange(event) {
+        this._justificacion.decision = event.target.value;
+        console.log('Dec> ', this._justificacion.decision);
+    }
+
   forceValidation() {
       // requerido pq Angular2-Polymer todavía no estan al 100%
       for (let inner in this.justificacionForm.controls) {

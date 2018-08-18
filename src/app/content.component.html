@@ -214,6 +214,12 @@
                                             label="Motivo de la selección del proveedor o persona" required char-counter maxlength="800" auto-validate
                                             error-message="requerido"></paper-textarea>
                         </div>
+                        <paper-radio-group [selected]="setDecision(_justificacion.decision)" (change)="selectedDecisionChange($event)">
+                            <paper-radio-button name="decision1" value="1" (ngModelChange)="_justificacion.decision">Económica</paper-radio-button>
+                            <paper-radio-button name="decision2" value="2" (ngModelChange)="_justificacion.decision">Eficiencia</paper-radio-button>
+                            <paper-radio-button name="decision3" value="3" (ngModelChange)="_justificacion.decision">Eficacia</paper-radio-button>
+                        </paper-radio-group>
+
 
                     </div>
 
