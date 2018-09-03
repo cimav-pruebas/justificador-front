@@ -100,7 +100,23 @@ export class Justificacion {
   forma_pago: string;
   motivo_seleccion: string;
   es_nacional: boolean;
-  decision:number;
+
+  economica: boolean;
+  eficiencia_eficacia: number;
+
+  prov1_fuente: number;
+  prov2_fuente: number;
+  prov3_fuente: number;
+
+  prov1_tecnicas: string;
+  prov2_tecnicas: string;
+  prov3_tecnicas: string;
+  prov1_cantidad: string;
+  prov2_cantidad: string;
+  prov3_cantidad: string;
+  prov1_nacional: boolean;
+  prov2_nacional: boolean;
+  prov3_nacional: boolean;
 
   constructor(){
     this.requisicion = '';
@@ -143,7 +159,23 @@ export class Justificacion {
 
     this.es_nacional = true;
 
-    this.decision = 1;
+    this.economica = true;
+    this.eficiencia_eficacia = 0;
+
+     this.prov1_fuente = 0;
+     this.prov2_fuente = 2;
+     this.prov3_fuente = 1;
+
+     this.prov1_tecnicas = '';
+     this.prov2_tecnicas = '';
+     this.prov3_tecnicas = '';
+     this.prov1_cantidad = '';
+     this.prov2_cantidad = '';
+     this.prov3_cantidad = '';
+    this.prov1_nacional = true;
+    this.prov2_nacional = true;
+    this.prov3_nacional = true;
+
   }
 
 }

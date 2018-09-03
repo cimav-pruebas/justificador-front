@@ -151,12 +151,31 @@ export class ContentComponent implements OnInit {
     return 'plazo' + plazoSel;
   }
 
+    selectedProv1FuenteChange(event) {
+        this._justificacion.prov1_fuente = event.target.value;
+    }
+    setProv1Fuente(fuenteSel: number) {
+        return 'prov1_fuente' + fuenteSel;
+    }
+    selectedProv2FuenteChange(event) {
+        this._justificacion.prov2_fuente = event.target.value;
+    }
+    setProv2Fuente(fuenteSel: number) {
+        return 'prov2_fuente' + fuenteSel;
+    }
+    selectedProv3FuenteChange(event) {
+        this._justificacion.prov3_fuente = event.target.value;
+    }
+    setProv3Fuente(fuenteSel: number) {
+        return 'prov3_fuente' + fuenteSel;
+    }
+
     setDecision(decisionSel: number) {
         return 'decision' + decisionSel;
     }
     selectedDecisionChange(event) {
-        this._justificacion.decision = event.target.value;
-        console.log('Dec> ', this._justificacion.decision);
+        this._justificacion.eficiencia_eficacia = event.target.value;
+        console.log('Dec> ', this._justificacion.eficiencia_eficacia);
     }
 
   forceValidation() {
@@ -257,17 +276,29 @@ export class ContentComponent implements OnInit {
   }
   */
 
-  pdficar() {
+  pdf_mercado() {
     this.dataService.updateJustificacion(this._justificacion.id, this._justificacion).subscribe(
         (response:Response) => {
           console.log("pdficar> " + response)
         },
         error => console.log(error),
         () => {
-          var newTab = window.open(this.config.apiUrl + 'justificaciones/' + this._justificacion.id + '.pdf');
+          var newTab = window.open(this.config.apiUrl + 'mercado/' + this._justificacion.id + '.pdf');
         }
     );
   }
+
+    pdficar() {
+        this.dataService.updateJustificacion(this._justificacion.id, this._justificacion).subscribe(
+            (response:Response) => {
+                console.log("pdficar> " + response)
+            },
+            error => console.log(error),
+            () => {
+                var newTab = window.open(this.config.apiUrl + 'justificaciones/' + this._justificacion.id + '.pdf');
+            }
+        );
+    }
 
   cotizar(num_provee: number) {
     this.dataService.updateJustificacion(this._justificacion.id, this._justificacion).subscribe(

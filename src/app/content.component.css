@@ -5,6 +5,21 @@ paper-card {
     margin: 20px 20px 40px 20px;
 }
 
+.buttons-layout-left {
+    position: fixed;
+    bottom:10px;
+    left: 320px;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    display: flex;
+    padding-right: 5px;
+}
+.buttons-layout-left paper-button {
+    float: left;
+    margin-top: 10px;
+    text-transform: capitalize;
+}
+
 .buttons-layout-right {
     position: fixed;
     bottom:10px;
@@ -34,6 +49,7 @@ paper-fab.pdficar {
 paper-radio-button, paper-checkbox{
     font-size: large;
     padding-top: 10px;
+    padding-right: 14px;
 }
 
 /*
@@ -90,4 +106,20 @@ paper-icon-button[disabled]{
 input::-ms-clear {
     color: red; /* This sets the cross color as red. */
     /* The cross can be hidden by setting the display attribute as "none" */
+}
+
+.texto-mediano {
+    padding-top: 10px;
+    font: inherit;
+    color: #737373;
+    -webkit-transition: -webkit-transform 0.25s, width 0.25s;
+    transition: transform 0.25s, width 0.25s;
+    -webkit-transform-origin: left top;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: 'Roboto', 'Noto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
 }

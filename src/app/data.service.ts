@@ -197,7 +197,9 @@ export class DataService {
             this.addProveedor(justificacion.proveedor_uno);
             this.addProveedor(justificacion.proveedor_dos);
             this.addProveedor(justificacion.proveedor_tres);
-        }).catch(this.handleError);
+        }).catch(
+            this.handleError
+        );
   }
 
   /*

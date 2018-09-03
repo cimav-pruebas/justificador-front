@@ -138,92 +138,180 @@
 
                         <p *ngIf="_justificacion.es_unico" style="color: gray;">Cuando es proveedor o persona única se aplicará la Fracción I</p>
                         <p *ngIf="_justificacion.tipo?.fraccion==1" style="color: gray;">Cuando es Fracción I debe ser proveedor o persona única</p>
-                        <p *ngIf="_justificacion.tipo?.fraccion==14" style="px; color: gray;">Cuando es Fracción XIV no debe ser proveedor o persona única</p>
+                        <p *ngIf="_justificacion.tipo?.fraccion==14" style="color: gray;">Cuando es Fracción XIV no debe ser proveedor o persona única</p>
 
-                        <div class="row" *ngIf="_justificacion.es_unico">
-
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-8" name="proveedorUnico" [(ngModel)]="_justificacion.proveedor_uno"
+                        <div class="row" *ngIf="_justificacion.es_unico" >
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-7" name="proveedorUnico" [(ngModel)]="_justificacion.proveedor_uno"
                                          label="Proveedor único" required char-counter maxlength="200" auto-validate error-message="requiere proveedor único">
                                 <paper-icon-button id="cotizar_id" raised class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(1)" [disabled]=!justificacionForm.form.valid></paper-icon-button> <!-- !justificacionForm.form.valid -->
 
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorUnicoMoneda"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-2" name="proveedorUnicoMoneda"
                                          [(ngModel)]="_justificacion.monto_uno" (change)="onMontoUno()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
                                 <div prefix>$</div>
                             </paper-input>
+
                         </div>
 
                         <div class="row" *ngIf="!_justificacion.es_unico && _justificacion.tipo?.fraccion!=14">
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="proveedorUno" [(ngModel)]="_justificacion.proveedor_uno"
+
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-10" name="proveedorUno" [(ngModel)]="_justificacion.proveedor_uno"
                                          label="Proveedor seleccionado" required char-counter maxlength="200" auto-validate error-message="requiere proveedor uno">
                                 <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(1)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorUnoMoneda"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-2" name="proveedorUnoMoneda"
                                          [(ngModel)]="_justificacion.monto_uno" (change)="onMontoUno()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
                                 <div prefix>$</div>
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="proveedorDos" [(ngModel)]="_justificacion.proveedor_dos"
+                            <div class="row">
+                                <paper-checkbox style="font-size: medium" class=" col-lg-offset-1 col-md-2" name="prov1_nacional" [(ngModel)]="_justificacion.prov1_nacional">¿Es nacional?</paper-checkbox>
+                            </div>
+                            <div class="row">
+                                <paper-textarea class="col-lg-offset-1 col-md-9" name="prov1_tecnicas"  [(ngModel)]="_justificacion.prov1_tecnicas"
+                                             label="¿CumpleX con las condiciones técnicas?" required char-counter maxlength="200" auto-validate error-message="requerido"></paper-textarea>
+                            </div>
+                            <div class="row">
+                                <paper-textarea class=" col-lg-offset-1 col-md-9" name="prov1_cantidad" [(ngModel)]="_justificacion.prov1_cantidad"
+                                             label="Cantidad que puede surtir" required char-counter maxlength="200" auto-validate error-message="requerido">
+                                </paper-textarea>
+                            </div>
+                            <div class="row col-lg-offset-1">
+                                <div class="texto-mediano">Fuente de consulta</div>
+                                <paper-radio-group [selected]="setProv1Fuente(_justificacion.prov1_fuente)" (change)="selectedProv1FuenteChange($event)">
+                                    <paper-radio-button name="prov1_fuente0" value="0" (ngModelChange)="_justificacion.prov1_fuente">Internet</paper-radio-button>
+                                    <paper-radio-button name="prov1_fuente1" value="1" (ngModelChange)="_justificacion.prov1_fuente">Compranet</paper-radio-button>
+                                    <paper-radio-button name="prov1_fuente2" value="2" (ngModelChange)="_justificacion.prov1_fuente">Presencial</paper-radio-button>
+                                </paper-radio-group>
+
+<!--
+                                <paper-radio-group [selected]="setPlazo(_justificacion.plazo)" (change)="selectedPlazoChange($event)">
+                                    <paper-radio-button name="plazo0" value="0" (ngModelChange)="_justificacion.plazo">Periodo</paper-radio-button>
+                                    <paper-radio-button name="plazo1" value="1" (ngModelChange)="_justificacion.plazo">Fecha tope</paper-radio-button>
+                                    <paper-radio-button name="plazo2" value="2" (ngModelChange)="_justificacion.plazo">A tantos días</paper-radio-button>
+                                </paper-radio-group>
+-->
+
+                            </div>
+
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-10" name="proveedorDos" [(ngModel)]="_justificacion.proveedor_dos"
                                          label="Segundo proveedor" required char-counter maxlength="200" auto-validate error-message="requiere proveedor dos">
                                 <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(2)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorDosMoneda"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-2" name="proveedorDosMoneda"
                                          [(ngModel)]="_justificacion.monto_dos" (change)="onMonto()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
                                 <div prefix>$</div>
                             </paper-input>
+                            <div class="row">
+                                <paper-checkbox style="font-size: medium" class=" col-lg-offset-1 col-md-2" name="prov2_nacional" [(ngModel)]="_justificacion.prov2_nacional">¿Es nacional?</paper-checkbox>
+                            </div>
+                            <div class="row">
+                                <paper-textarea class=" col-lg-offset-1 col-md-9" name="prov2_tecnicas" [(ngModel)]="_justificacion.prov2_tecnicas"
+                                             label="¿Cumple con las condiciones técnicas?" required char-counter maxlength="200" auto-validate error-message="requerido">
+                                </paper-textarea>
+                            </div>
+                            <div class="row">
+                                <paper-textarea class=" col-lg-offset-1 col-md-9" name="prov2_cantidad" [(ngModel)]="_justificacion.prov2_cantidad"
+                                             label="Cantidad que puede surtir" required char-counter maxlength="200" auto-validate error-message="requerido">
+                                </paper-textarea>
+                            </div>
+                            <div class="row col-lg-offset-1">
+                                <div class="texto-mediano">Fuente de consulta</div>
+                                <paper-radio-group [selected]="setProv2Fuente(_justificacion.prov2_fuente)" (change)="selectedProv2FuenteChange($event)">
+                                    <paper-radio-button name="prov2_fuente0" value="0" (ngModelChange)="_justificacion.prov2_fuente">Internet</paper-radio-button>
+                                    <paper-radio-button name="prov2_fuente1" value="1" (ngModelChange)="_justificacion.prov2_fuente">Compranet</paper-radio-button>
+                                    <paper-radio-button name="prov2_fuente2" value="2" (ngModelChange)="_justificacion.prov2_fuente">Presencial</paper-radio-button>
+                                </paper-radio-group>
+                            </div>
 
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="proveedorTres" [(ngModel)]="_justificacion.proveedor_tres"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-10" name="proveedorTres" [(ngModel)]="_justificacion.proveedor_tres"
                                          label="Tercer proveedor" char-counter maxlength="200">
                                 <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(3)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="proveedorTresMoneda"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-2" name="proveedorTresMoneda"
                                          [(ngModel)]="_justificacion.monto_tres" (change)="onMonto()" label="Monto"  auto-validate error-message="sólo números"  min="0.00" max="19999999.99" pattern="[0-9,.]+" >
                                 <div prefix>$</div>
                             </paper-input>
+                            <div class="row">
+                                <paper-checkbox style="font-size: medium" class=" col-lg-offset-1 col-md-2" name="prov3_nacional" [(ngModel)]="_justificacion.prov3_nacional">¿Es nacional?</paper-checkbox>
+                            </div>
+                            <div class="row">
+                                <paper-textarea class=" col-lg-offset-1 col-md-9" name="prov3_tecnicas" [(ngModel)]="_justificacion.prov3_tecnicas"
+                                             label="¿Cumple con las condiciones técnicas?" required char-counter maxlength="200" auto-validate error-message="requerido">
+                                </paper-textarea>
+                            </div>
+                            <div class="row">
+                                <paper-textarea class=" col-lg-offset-1 col-md-9" name="prov3_cantidad" [(ngModel)]="_justificacion.prov3_cantidad"
+                                             label="Cantidad que puede surtir" required char-counter maxlength="200" auto-validate error-message="requerido">
+                                </paper-textarea>
+                            </div>
+                            <div class="row col-lg-offset-1">
+                                <div class="texto-mediano">Fuente de consulta</div>
+                                <paper-radio-group [selected]="setProv3Fuente(_justificacion.prov3_fuente)" (change)="selectedProv3FuenteChange($event)">
+                                    <paper-radio-button name="prov3_fuente0" value="0" (ngModelChange)="_justificacion.prov3_fuente">Internet</paper-radio-button>
+                                    <paper-radio-button name="prov3_fuente1" value="1" (ngModelChange)="_justificacion.prov3_fuente">Compranet</paper-radio-button>
+                                    <paper-radio-button name="prov3_fuente2" value="2" (ngModelChange)="_justificacion.prov3_fuente">Presencial</paper-radio-button>
+                                </paper-radio-group>
+                            </div>
+
                         </div>
                         <div class="row" *ngIf="!_justificacion.es_unico  && _justificacion.tipo?.fraccion==14">
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="personaUno" [(ngModel)]="_justificacion.proveedor_uno"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-7" name="personaUno" [(ngModel)]="_justificacion.proveedor_uno"
                                          label="Persona seleccionada" required char-counter maxlength="200" auto-validate error-message="requiere persona uno">
                                 <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(1)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="personaUnoMoneda"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-2" name="personaUnoMoneda"
                                          [(ngModel)]="_justificacion.monto_uno" (change)="onMontoUno()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
                                 <div prefix>$</div>
                             </paper-input>
 
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="personaDos" [(ngModel)]="_justificacion.proveedor_dos"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-7" name="personaDos" [(ngModel)]="_justificacion.proveedor_dos"
                                          label="Segunda persona" required char-counter maxlength="200" auto-validate error-message="requiere persona dos">
                                 <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(2)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="personaDosMoneda"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-2" name="personaDosMoneda"
                                          [(ngModel)]="_justificacion.monto_dos" (change)="onMonto()" label="Monto" required auto-validate error-message="requerido / sólo números" min="0.00" max="19999999.99" pattern="[0-9,.]+" >
                                 <div prefix>$</div>
                             </paper-input>
 
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-9" name="personaTres" [(ngModel)]="_justificacion.proveedor_tres"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="col-md-7" name="personaTres" [(ngModel)]="_justificacion.proveedor_tres"
                                          label="Tercera persona" char-counter maxlength="200">
                                 <paper-icon-button class="generar-cotizacion custom indigo" icon="mail" prefix (click)="cotizar(3)" [disabled]=!justificacionForm.form.valid></paper-icon-button>
                             </paper-input>
-                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-3" name="personaTresMoneda"
+                            <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" class="align-right col-md-2" name="personaTresMoneda"
                                          [(ngModel)]="_justificacion.monto_tres" (change)="onMonto()" label="Monto"  auto-validate error-message="sólo números" pattern="[0-9,.]+" min="0.00" max="19999999.99">
                                 <div prefix>$</div>
                             </paper-input>
+
                         </div>
 
                         <div class="row" *ngIf="!_justificacion.es_unico">
                             <paper-textarea class="col-md-12" name="motivoSeleccion" [(ngModel)]="_justificacion.motivo_seleccion"
                                             label="Motivo de la selección del proveedor o persona" required char-counter maxlength="800" auto-validate
                                             error-message="requerido"></paper-textarea>
+                            <div style="padding-left: 15px;">
+                                <paper-checkbox name="esEconomica" [(ngModel)]="_justificacion.economica">Económica</paper-checkbox>
+                                <paper-radio-group [selected]="setDecision(_justificacion.eficiencia_eficacia)" (change)="selectedDecisionChange($event)">
+                                    <paper-radio-button name="decision0" value="0" (ngModelChange)="_justificacion.decision">Eficiencia</paper-radio-button>
+                                    <paper-radio-button name="decision1" value="1" (ngModelChange)="_justificacion.decision">Eficacia</paper-radio-button>
+                                </paper-radio-group>
+                            </div>
                         </div>
-                        <paper-radio-group [selected]="setDecision(_justificacion.decision)" (change)="selectedDecisionChange($event)">
-                            <paper-radio-button name="decision1" value="1" (ngModelChange)="_justificacion.decision">Económica</paper-radio-button>
-                            <paper-radio-button name="decision2" value="2" (ngModelChange)="_justificacion.decision">Eficiencia</paper-radio-button>
-                            <paper-radio-button name="decision3" value="3" (ngModelChange)="_justificacion.decision">Eficacia</paper-radio-button>
-                        </paper-radio-group>
 
 
                     </div>
 
-                    <div style="
+                <!--
+                <div class="row">
+                    <paper-button mini id="pdf_mercado_id" class="col-lg-offset-1 custom indigo" icon="account-balance" (click)="pdf_mercado()"
+                                  [disabled]=!justificacionForm.form.valid
+                                  style="height: 30px;  margin-top: 10px; margin-bottom: 20px;">
+                        <iron-icon icon="icons:account-balance"></iron-icon> <span style="margin-left: 5px;">Mercado</span>
+                    </paper-button>
+                    <paper-tooltip position="right" for="pdf_mercado_id" offset="0">Generar PDF del Estudio de Mercado</paper-tooltip>
+                </div>
+                -->
+
+                <div style="
                         padding-top: 10px;
                         font: inherit;
                         color: #737373;
@@ -238,9 +326,8 @@
                         font-weight: 400;
                         line-height: 24px;
                     ">Datos proveedor/persona seleccionado</div>
-
                     <div class="col-lg-offset-1">
-                        <paper-checkbox name="esNacional" [(ngModel)]="_justificacion.es_nacional">¿Es nacional?</paper-checkbox>
+                        <!-- <paper-checkbox name="esNacional" [(ngModel)]="_justificacion.es_nacional">¿Es nacional?</paper-checkbox> -->
                         <paper-input (focus)="onFocus($event)" (mouseup)="onFocus($event)" (focus)="onFocus($event)" (mouseup)="onFocus($event)" label="Domicilio " required
                                      auto-validate error-message="requerido" name="domicilio" [(ngModel)]="_justificacion.domicilio"></paper-input>
                         <div class="row">
@@ -254,7 +341,6 @@
                         <paper-textarea name="datosbanco" [(ngModel)]="_justificacion.datosbanco" label="Datos del banco" required char-counter maxlength="200" auto-validate
                                         error-message="requerido"></paper-textarea>
                     </div>
-
 
                     <div style="
                         padding-top: 10px;
@@ -372,11 +458,22 @@
 
             <div style="height: 20px;"></div>
 
+            <!--
+            <div class="buttons-layout-left">
+                <paper-fab mini id="pdf_mercado_id" raised class="custom indigo" icon="account-balance" [disabled]=!justificacionForm.form.valid (click)="pdf_mercado()">PDF</paper-fab>
+                <paper-tooltip position="right" for="pdf_mercado_id" offset="0">Generar PDF del Estudio de Mercado</paper-tooltip>
+            </div>
+            -->
+
+
             <div class="buttons-layout-right">
+
+                <paper-fab mini id="pdf_mercado_id" raised class="custom indigo" icon="account-balance" [disabled]=!justificacionForm.form.valid (click)="pdf_mercado()">PDF</paper-fab>
+                <paper-tooltip position="right" for="pdf_mercado_id" offset="0">Generar PDF del Estudio de Mercado</paper-tooltip>
 
                 <!--        <a href target="_blank" [href]="getUrlPDF()"> -->
                 <paper-fab mini id="pdficar_id" raised class="custom indigo" icon="print" [disabled]=!justificacionForm.form.valid (click)="pdficar()">PDF</paper-fab> <!--  -->
-                <paper-tooltip position="left" for="pdficar_id" offset="0">Generar PDF</paper-tooltip>
+                <paper-tooltip position="left" for="pdficar_id" offset="0">Generar PDF de la Justificación</paper-tooltip>
                 <!--        </a> -->
 
                 <!-- -->
