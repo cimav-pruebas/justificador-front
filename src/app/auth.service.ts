@@ -8,10 +8,20 @@ import { tokenNotExpired } from 'angular2-jwt';
 // Avoid name not found warnings
 declare var Auth0Lock: any;
 
+var options = {
+  language: 'es',
+  theme: {
+    logo: 'http://justificador.cimav.edu.mx/assets/img/logo-cimav.png'
+  },
+  languageDictionary: {
+    title: "Autentificarse"
+  }
+};
+
 @Injectable()
 export class Auth implements OnInit {
   // Configure Auth0
-  lock = new Auth0Lock('IRPUwl406FAAq6zd4QWEZKUFAH8of29G', 'cimav.auth0.com', {});
+  lock = new Auth0Lock('IRPUwl406FAAq6zd4QWEZKUFAH8of29G', 'cimav.auth0.com', options);
   //Store profile object in auth class
   userProfile: Object;
   nickName: string = '';
