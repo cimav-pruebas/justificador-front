@@ -53,14 +53,20 @@
         <div *ngIf="auth.isLogged()">
 
             <paper-scroll-header-panel class="" style="width: 100%; position: absolute; bottom: 100px; top: 190px;">
-                <paper-menu >
 
-                    <paper-item *ngIf="auth.isLogged() && (auth.nickName.includes('juan.calderon') || auth.nickName.includes('jose.estrada'))" >
-                        <paper-input label="Buscar requisición" [(ngModel)]="requisicionToSearch" style="width: 100%;">
-                            <paper-icon-button icon="send" suffix (click)="searchRequisicion()" [disabled]=(requisicionToSearch.length<6) ></paper-icon-button>
-                        </paper-input>
-                    </paper-item>
-                    <paper-item style="visibility: collapse; height: 8px; min-height: 8px;"><span>Invisible </span></paper-item>
+                <paper-item *ngIf="auth.isLogged() && (auth.nickName.includes('juan.calderon') || auth.nickName.includes('jose.estrada'))" >
+                    <paper-input label="Entrar como" [(ngModel)]="loggedAs" style="width: 100%;">
+                        <paper-icon-button icon="send" suffix (click)="logearseAs()" ></paper-icon-button>
+                    </paper-input>
+                </paper-item>
+                <paper-item *ngIf="auth.isLogged() && (auth.nickName.includes('juan.calderon') || auth.nickName.includes('jose.estrada'))" >
+                    <paper-input label="Buscar requisición" [(ngModel)]="requisicionToSearch" style="width: 100%;">
+                        <paper-icon-button icon="send" suffix (click)="searchRequisicion()" [disabled]=(requisicionToSearch.length<6) ></paper-icon-button>
+                    </paper-input>
+                </paper-item>
+                <paper-item style="visibility: collapse; height: 8px; min-height: 8px;"><span>Invisible </span></paper-item>
+
+                <paper-menu >
 
                     <paper-item *ngFor="let justificacion of justificaciones ; let i = index"
                                 [class.selected]="justificacion == selectedJustificacion"
@@ -133,10 +139,6 @@
             <div class="card-content" >Versión: {{config.version}}</div>
             <div class="card-content" >Logged: {{auth.isLogged()}} @ {{auth.nickName}}</div>
             <div class="card-content" >Rest: {{config.apiUrl}}</div>
-
-            <paper-input label="Entrar como" [(ngModel)]="loggedAs" >
-                <paper-icon-button icon="send" prefix (click)="logearseAs()" ></paper-icon-button>
-            </paper-input>
         </paper-card>
 
 
