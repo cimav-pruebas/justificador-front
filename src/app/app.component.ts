@@ -41,6 +41,17 @@ export class AppComponent implements  OnInit {
 
   }
 
+  requisicionToSearch: string = "";
+  searchRequisicion() {
+    this.requisicionToSearch = isNullOrUndefined(this.requisicionToSearch)? "" :  this.requisicionToSearch.replace(/\s/g, '');
+    if (this.requisicionToSearch.length >= 6) {
+      this.loadJustificacionesByRequisicion();
+    } else {
+      this.justificaciones = [];
+      this.selectedJustificacion = null;
+    }
+  }
+
   loggedAs: string;
   logearseAs() {
     this.cargarEmpleadoLogeado();
@@ -106,6 +117,19 @@ export class AppComponent implements  OnInit {
           () => console.log("Get Justificaciones:" + (this.justificaciones).length)
       );
     }
+  }
+
+  loadJustificacionesByRequisicion(): void {
+      this.dataService.getJustificacionesByRequisicion(this.requisicionToSearch).subscribe(
+          (response: Justificacion[]) => {
+
+            this.justificaciones = response;
+
+            this.selectedJustificacion = null;
+          },
+          error => console.log(error),
+          () => console.log("Get JustificacionesByRequisicion:" + (this.justificaciones).length)
+      );
   }
 
   _idx: number;

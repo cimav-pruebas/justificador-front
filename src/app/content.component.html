@@ -23,7 +23,7 @@
                     <div class="row">
 
                         <vaadin-combo-box id="tipo_select" class="col-md-6" required auto-validate error-message="requiere seleccionar un tipo"
-                                          label="Tipo de justificación"
+                                          [label]= "justiODictamen()"
                                           [items]="tipos"
                                           item-label-path="texto"
                                           item-value-path="code"
@@ -109,8 +109,9 @@
                                 <div prefix>#</div>
                             </paper-input>
                         </div>
-                        <paper-textarea name="condicionespago" [(ngModel)]="_justificacion.condiciones_pago" label="Condiciones de pago" required char-counter maxlength="400"
-                                        auto-validate error-message="requerido"></paper-textarea>
+                        <paper-textarea name="condicionespago" [(ngModel)]="_justificacion.condiciones_pago" label="Condiciones de entrega" required char-counter maxlength="400"
+                                        auto-validate error-message="requerido" id="condiciones_id" ></paper-textarea>
+                        <paper-tooltip position="top" for="condiciones_id" offset="0">Se refiere al modo de pago en que se va a recibir el bien o servicio. \nE.g. "Entregar en almacen Chihuahua", "En laboratorio...", etc.</paper-tooltip>
                     </div>
 
                     <paper-checkbox name="esUnico"  [(ngModel)]="_justificacion.es_unico">¿Es Proveedor/Persona única?</paper-checkbox>

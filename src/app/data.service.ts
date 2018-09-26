@@ -71,11 +71,23 @@ export class DataService {
     var url = this.config.apiUrl + 'justificaciones/all_by_id_empleado/' + idEmpleado + ".json";
     console.log('getJustificaciones(', idEmpleado, ')');
     return this._http.get(url ,  { headers: this.headers })
-      .map((response: Response) => {
-        let justis = <Justificacion[]>response.json();
-        return  justis; //<Justificacion[]>response.json();
-      })
-    .catch(this.handleError);
+        .map((response: Response) => {
+          let justis = <Justificacion[]>response.json();
+          return  justis; //<Justificacion[]>response.json();
+        })
+        .catch(this.handleError);
+
+  }
+
+  public getJustificacionesByRequisicion = (requisicion: string): Observable<Justificacion[]> => {
+    var url = this.config.apiUrl + 'justificaciones/show_by_requisicion/' + requisicion ;
+    console.log('getJustificaciones(', requisicion, ')');
+    return this._http.get(url ,  { headers: this.headers })
+        .map((response: Response) => {
+          let justis = <Justificacion[]>response.json();
+          return  justis; //<Justificacion[]>response.json();
+        })
+        .catch(this.handleError);
 
   }
 

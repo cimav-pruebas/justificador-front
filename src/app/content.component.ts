@@ -362,5 +362,14 @@ export class ContentComponent implements OnInit {
     }
   }
 
+  justiODictamen() {
+      if(this._justificacion.tipo.fraccion == 7) {
+         return 'Tipo de justificación > Dictamen';
+      } else {
+          return 'Tipo de justificación > Justificación';
+      }
+  }
+
+
 }
 

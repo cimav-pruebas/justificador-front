@@ -118,6 +118,8 @@ export class Justificacion {
   prov2_nacional: boolean;
   prov3_nacional: boolean;
 
+  fecha_impresion: Date;
+
   constructor(){
     this.requisicion = '';
     this.proyecto = '';
@@ -175,6 +177,8 @@ export class Justificacion {
     this.prov1_nacional = true;
     this.prov2_nacional = true;
     this.prov3_nacional = true;
+
+    this.fecha_impresion = new Date();
 
   }
 
