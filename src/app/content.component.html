@@ -38,7 +38,8 @@
                             <paper-icon-button icon="remove-circle" class="clear-button" style="display: none;"></paper-icon-button>
                         </vaadin-combo-box>
 
-                        <vaadin-combo-box class="col-md-6" *ngIf="_justificacion.tipo?.fraccion == 7" required auto-validate error-message="requiere seleccionar la partida"
+                        <!-- *ngIf="_justificacion.tipo?.fraccion == 7"  -->
+                        <vaadin-combo-box class="col-md-6" required auto-validate error-message="requiere seleccionar la partida"
                                           label="Partida presupuestal"
                                           [items]="partidas"
                                           item-label-path="texto"
